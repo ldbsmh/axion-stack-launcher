@@ -23,6 +23,23 @@ jobs:
           ref: 16-dev
           submodules: recursive
 
+      - name: Apply Axion-Stack patches
+        run: |
+          PATCHES="$GITHUB_WORKSPACE/patches/quickstep/src/com/android/quickstep"
+          TARGET="quickstep/src/com/android/quickstep"
+          cp -v $PATCHES/views/AxStack*.java      $TARGET/views/
+          cp -v $PATCHES/views/AxTaskViewTransform.java $TARGET/views/
+          cp -v $PATCHES/util/AxAnimationEngine.java    $TARGET/util/
+          cp -v $PATCHES/util/AxWallpaperZoom.java      $TARGET/util/
+          cp -v $PATCHES/views/TaskView.kt         $TARGET/views/
+          cp -v $PATCHES/views/TaskViewIcon.java   $TARGET/views/
+          cp -v $PATCHES/views/IconView.kt         $TARGET/views/
+          cp -v $PATCHES/views/IconAppChipView.kt  $TARGET/views/
+          cp -v $PATCHES/views/LauncherRecentsView.java $TARGET/views/
+          cp -v $PATCHES/views/RecentsView.java    $TARGET/views/
+          echo "--- patched files ---"
+          ls -la $TARGET/views/AxStack* $TARGET/util/Ax*
+
       - name: Set up JDK 21
         uses: actions/setup-java@v6
         with:
