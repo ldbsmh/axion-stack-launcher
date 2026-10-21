@@ -21,13 +21,7 @@ jobs:
         with:
           repository: LawnchairLauncher/lawnchair
           ref: 16-dev
-          fetch-depth: 0   # 全量历史，保证稳定提交 SHA 可达
           submodules: false
-
-      - name: Pin to stable commit (3974765e)
-        # 上游 16-dev HEAD 有 glass-blur 编译错误(SliderPreference unresolved)，官方 CI 也红。
-        # fetch-depth:0 后该 SHA 在本地可达，直接 checkout。
-        run: git checkout 3974765ea9ed0a1c76e9e3fa9143461f7e8980a8f
 
       - name: Set up JDK 21
         uses: actions/setup-java@v6
