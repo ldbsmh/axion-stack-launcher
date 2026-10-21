@@ -16,17 +16,23 @@ jobs:
         # 与官方 Lawnchair CI 一致的有效变体名
         build-variant: [ assembleLawnWithQuickstepNightlyRelease ]
     steps:
+      - name: Checkout patch sources (axion-stack-launcher)
+        uses: actions/checkout@v7
+        with:
+          path: patches-repo
+
       - name: Checkout Lawnchair 16 (Android 17 / SDK 37)
         uses: actions/checkout@v7
         with:
           repository: LawnchairLauncher/lawnchair
           ref: 16-dev
           submodules: recursive
+          path: lawnchair
 
       - name: Apply Axion-Stack patches
         run: |
-          PATCHES="$GITHUB_WORKSPACE/patches/quickstep/src/com/android/quickstep"
-          TARGET="quickstep/src/com/android/quickstep"
+          PATCHES="$GITHUB_WORKSPACE/patches-repo/patches/quickstep/src/com/android/quickstep"
+          TARGET="lawnchair/quickstep/src/com/android/quickstep"
           cp -v $PATCHES/views/AxStack*.java      $TARGET/views/
           cp -v $PATCHES/views/AxTaskViewTransform.java $TARGET/views/
           cp -v $PATCHES/util/AxAnimationEngine.java    $TARGET/util/
@@ -50,11 +56,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Build Release APK (with Quickstep)
+        working-directory: lawnchair
         run: ./gradlew ${{ matrix.build-variant }}
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.build-variant }}
-          path: build/outputs/apk/**/*.apk
+          path: lawnchair/build/outputs/apk/**/*.apk
           if-no-files-found: error
