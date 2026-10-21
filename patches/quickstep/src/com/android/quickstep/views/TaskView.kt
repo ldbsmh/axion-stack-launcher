@@ -492,6 +492,7 @@ constructor(
     private var modalAlpha by MultiPropertyDelegate(taskViewAlpha, Alpha.Modal)
     private var appliedAxStackAlpha by MultiPropertyDelegate(taskViewAlpha, Alpha.AxStack)
     private var axLaunchAlpha by MultiPropertyDelegate(taskViewAlpha, Alpha.AxLaunch)
+    private var dismissAlpha by MultiPropertyDelegate(taskViewAlpha, Alpha.Dismiss)
 
     protected var shouldShowScreenshot = false
         get() = !isRunningTask || field
@@ -2060,7 +2061,6 @@ constructor(
         taskContainers.forEach {
             it.iconView.asView().elevation = elevation
         }
-        lockBadgeView?.elevation = elevation
     }
 
     fun getAxStackIconElevation(): Float = axStackIconElevation
@@ -2157,6 +2157,7 @@ constructor(
             Modal,
             AxStack,
             AxLaunch,
+            Dismiss,
         }
 
         private enum class SettledProgress {
@@ -2227,5 +2228,22 @@ constructor(
         val DISMISS_SCALE: FloatProperty<TaskView> = KFloatProperty(TaskView::dismissScale)
 
         @JvmField val SPLIT_ALPHA: FloatProperty<TaskView> = KFloatProperty(TaskView::splitAlpha)
+
+        @VisibleForTesting
+        fun calculateDismissAlpha(
+            displacement: Float,
+            dismissLength: Float,
+            isGoingUp: Boolean,
+        ): Float {
+            val dismissDistance = if (isGoingUp) abs(displacement) else 0f
+            val fadeStart = 0f
+            val fadeEnd = abs(dismissLength)
+            if (fadeEnd <= 0f || fadeEnd <= fadeStart) {
+                return if (fadeEnd > 0f && dismissDistance >= fadeEnd) 0f else 1f
+            }
+            val fadeProgress =
+                ((dismissDistance - fadeStart) / (fadeEnd - fadeStart)).coerceIn(0f, 1f)
+            return 1f - fadeProgress
+        }
     }
 }
