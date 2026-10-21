@@ -20,10 +20,15 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: LawnchairLauncher/lawnchair
-          # 固定到 CI 全绿的稳定提交 (2026-10-21)，上游 16-dev HEAD 当前有
-          # glass-blur 编译错误 (GeneralPreferences:172 SliderPreference)，官方 CI 也红了。
-          ref: 3974765ea9ed0a1c76e9e3fa9143461f7e8980a8f
+          ref: 16-dev
           submodules: true
+
+      - name: Pin to stable commit (3974765e)
+        # 上游 16-dev HEAD 当前有 glass-blur 编译错误(SliderPreference unresolved)，官方 CI 也红。
+        # 浅克隆(fetch-depth:1)没有旧提交对象，需先 fetch 该 SHA 再 checkout。
+        run: |
+          git fetch origin 3974765ea9ed0a1c76e9e3fa9143461f7e8980a8f
+          git checkout 3974765ea9ed0a1c76e9e3fa9143461f7e8980a8f
 
       - name: Set up JDK 21
         uses: actions/setup-java@v6
