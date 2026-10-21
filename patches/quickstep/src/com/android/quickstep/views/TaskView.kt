@@ -2237,7 +2237,7 @@ constructor(
         ): Float {
             val dismissDistance = if (isGoingUp) kotlin.math.abs(displacement) else 0f
             val fadeStart = 0f
-            val fadeEnd = abs(dismissLength)
+            val fadeEnd = kotlin.math.abs(dismissLength)
             if (fadeEnd <= 0f || fadeEnd <= fadeStart) {
                 return if (fadeEnd > 0f && dismissDistance >= fadeEnd) 0f else 1f
             }
