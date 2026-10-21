@@ -20,7 +20,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: LawnchairLauncher/lawnchair
-          ref: 16-dev
+          # 固定到 CI 全绿的稳定提交 (2026-10-21)，上游 16-dev HEAD 当前有
+          # glass-blur 编译错误 (GeneralPreferences:172 SliderPreference)，官方 CI 也红了。
+          ref: 3974765ea9ed0a1c76e9e3fa9143461f7e8980a8f
           submodules: true
 
       - name: Set up JDK 21
