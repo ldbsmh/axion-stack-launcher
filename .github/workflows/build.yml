@@ -37,6 +37,8 @@ jobs:
           cp -v $PATCHES/views/AxTaskViewTransform.java $TARGET/views/
           cp -v $PATCHES/util/AxAnimationEngine.java    $TARGET/util/
           cp -v $PATCHES/util/AxWallpaperZoom.java      $TARGET/util/
+          cp -v $PATCHES/util/AxTaskViewSimulatorExt.java $TARGET/util/
+          cp -v $PATCHES/util/TaskViewSimulator.java    $TARGET/util/
           cp -v $PATCHES/views/TaskView.kt         $TARGET/views/
           cp -v $PATCHES/views/TaskViewIcon.java   $TARGET/views/
           cp -v $PATCHES/views/IconView.kt         $TARGET/views/
