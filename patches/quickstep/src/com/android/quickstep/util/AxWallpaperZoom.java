@@ -165,7 +165,8 @@ public final class AxWallpaperZoom {
             return;
         }
         sZoomOut = boundedZoom;
-        systemUiProxy.setLauncherWallpaperZoom(boundedZoom);
+        // NOTE: Axion calls systemUiProxy.setLauncherWallpaperZoom(boundedZoom) here,
+        // which requires AOSP SystemUI-side support not present in Lawnchair. No-op'd.
     }
 
     private static float valueAt(float start, float end, float progress) {
@@ -205,37 +206,20 @@ public final class AxWallpaperZoom {
         @Override
         public void onAnimationStart(Animator animation) {
             mCancelled = false;
-            if (mDepthController != null) {
-                mDepthController.setWallpaperZoomOverride(0f);
-            }
+            AxAnimationEngine.trace(TAG, "zoomState start");
             begin(this);
-            if (mDepthController != null) {
-                mDepthController.stateDepth.setValue(0f);
-            }
         }
 
         @Override
         public void onAnimationCancel(Animator animation) {
             mCancelled = true;
-            if (mDepthController != null) {
-                mDepthController.setWallpaperZoomOverride(Float.NaN);
-            }
             end(this, sZoomOut);
-            if (mDepthController != null) {
-                mDepthController.stateDepth.setValue(0f);
-            }
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
             if (!mCancelled) {
-                if (mDepthController != null) {
-                    mDepthController.setWallpaperZoomOverride(Float.NaN);
-                }
                 end(this, mEndZoomOut);
-                if (mDepthController != null) {
-                    mDepthController.stateDepth.setValue(mEndDepth);
-                }
             }
         }
 
@@ -245,9 +229,6 @@ public final class AxWallpaperZoom {
             }
             float zoom = valueAt(mStartZoomOut, mEndZoomOut, progress);
             setZoom(mSystemUiProxy, zoom);
-            if (mDepthController != null) {
-                mDepthController.stateDepth.setValue(progress * mEndDepth);
-            }
         }
     }
 

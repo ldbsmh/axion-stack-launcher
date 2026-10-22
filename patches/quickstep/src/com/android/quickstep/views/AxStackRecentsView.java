@@ -18,7 +18,6 @@ package com.android.quickstep.views;
 import static com.android.launcher3.PagedView.INVALID_PAGE;
 import static com.android.quickstep.GestureState.GestureEndTarget.HOME;
 import static com.android.quickstep.GestureState.GestureEndTarget.RECENTS;
-import static com.android.quickstep.GestureState.GestureEndTarget.REJECT_HOME;
 
 import com.android.quickstep.GestureState.GestureEndTarget;
 
@@ -158,7 +157,7 @@ public abstract class AxStackRecentsView<
                 + " target=" + endTarget);
         super.onGestureAnimationEnd();
         mGestureActive = false;
-        if (endTarget != HOME && endTarget != REJECT_HOME) {
+        if (endTarget != HOME) {
             updateCurveProperties();
         } else {
             setRecentsWallpaperZoomOverride(Float.NaN);
@@ -332,7 +331,6 @@ public abstract class AxStackRecentsView<
         }
     }
 
-    @Override
     boolean snapToTaskIfNeeded(TaskView taskView) {
         if (mLaunchTask != null) {
             return true;
@@ -362,7 +360,6 @@ public abstract class AxStackRecentsView<
         return settling;
     }
 
-    @Override
     public void prepareTaskForLaunch(TaskView taskView) {
         if (!mStackTransformsActive || !isStackTask(taskView)) {
             return;
@@ -459,7 +456,6 @@ public abstract class AxStackRecentsView<
         return mStackTransformsActive ? 0 : defaultTranslation;
     }
 
-    @Override
     boolean shouldUseTaskDismissScrollReflow() {
         return mStackTransformsActive;
     }
@@ -694,7 +690,7 @@ public abstract class AxStackRecentsView<
             return mOverviewEnabled;
         }
         GestureEndTarget target = mCurrentGestureEndTarget;
-        return target != null && target != HOME && target != REJECT_HOME;
+        return target != null && target != HOME;
     }
 
     @Override
@@ -900,10 +896,8 @@ public abstract class AxStackRecentsView<
     }
 
     private void setRecentsWallpaperZoomOverride(float zoom) {
-        DepthController depthController = getDepthController();
-        if (depthController != null) {
-            depthController.setWallpaperZoomOverride(zoom);
-        }
+        // Axion calls depthController.setWallpaperZoomOverride(zoom) here, which requires
+        // AOSP SystemUI-side support not present in Lawnchair. No-op'd.
     }
 
     private float getStackCardTilt(boolean visible, float distance) {
