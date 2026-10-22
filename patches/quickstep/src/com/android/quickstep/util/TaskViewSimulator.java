@@ -595,4 +595,17 @@ public class TaskViewSimulator implements TransformParams.BuilderProxy {
         // Ideally we should use square-root. This is an optimization as one of the dimension is 0.
         return Math.max(Math.abs(mTempPoint[0]), Math.abs(mTempPoint[1]));
     }
+
+    public void setAxStackTransform(
+            float scale, float translationX, float translationY, float alpha) {
+        mAxExt.setStackTransform(scale, translationX, translationY, alpha);
+    }
+
+    public void setAxStackTransformPinned(boolean pinned) {
+        mAxExt.setStackTransformPinned(pinned);
+    }
+
+    public void setAxLaunchAlpha(float alpha) {
+        mAxExt.setLaunchAlpha(alpha);
+    }
 }
